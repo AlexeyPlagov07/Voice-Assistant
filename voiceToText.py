@@ -2,7 +2,8 @@ import pyttsx3
 import datetime
 import speech_recognition as sr
 import smtplib
-
+import weather
+import os
 class person:
     def __init__(self, name, phone, email):
         self.name = name
@@ -33,6 +34,22 @@ def date():
     speak(Months[month-1])
     speak(date)
     speak(year)
+
+
+def weather():
+    import weather
+    import os
+    os.system("python weather.py")
+    # Make sure the weather data is fetched first
+    weather.fetch_weather()
+
+    # Now you can call the return functions
+    speak("It is "+str(weather.return_current())+"outside")
+    speak("With a temperature of"+str(weather.return_temp())+"degrees celsius")
+    #print(weather.return_weather())
+
+
+
 
 def no():
     global stop_second_loop
@@ -97,7 +114,7 @@ def sendEmail():
         speak("Type the details in the console.")
         add_to_dict()
         sendEmail()
-command_list = {'time':time, 'date':date, "no":no, "email":sendEmail}
+command_list = {'time':time, 'date':date, "no":no, "email":sendEmail, "weather":weather}
 def repeat():
 
     # Initialize recognizer
