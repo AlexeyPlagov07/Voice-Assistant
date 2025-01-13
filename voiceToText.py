@@ -21,9 +21,17 @@ def speak(audio):
     engine.runAndWait()
 
 def time():
-    Time = datetime.datetime.now().strftime("%H:%M:%S")
+    Time = datetime.datetime.now()
+    half = ""
+    if Time.hour > 12:
+        hour = str(Time.hour - 12)
+        half = 'PM'
+    else:
+        hour = str(Time.hour)
+        half = 'AM'
+    minute = str(Time.minute)
     speak('The current time is')
-    speak(Time)
+    speak(str(hour+" "+minute+" "+half))
 
 def date():
     Months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
@@ -44,14 +52,19 @@ def weather():
     weather.fetch_weather()
 
     # Now you can call the return functions
+    current_temp = str(weather.return_temp())
+
+    if current_temp[0] == '-':
+        current_temp = (' negative '+ str(current_temp[1::]))
     speak("It is "+str(weather.return_current())+"outside")
-    speak("With a temperature of"+str(weather.return_temp())+"degrees celsius")
+    speak("With a temperature of"+current_temp+"degrees celsius")
     #print(weather.return_weather())
 
 
 
 
 def no():
+    print("stopped")
     global stop_second_loop
     stop_second_loop = 1
 
@@ -114,7 +127,7 @@ def sendEmail():
         speak("Type the details in the console.")
         add_to_dict()
         sendEmail()
-command_list = {'time':time, 'date':date, "no":no, "email":sendEmail, "weather":weather}
+command_list = {'time':time, 'date':date, "day":date, " no ":no, "email":sendEmail, "weather":weather}
 def repeat():
 
     # Initialize recognizer
@@ -132,9 +145,11 @@ def repeat():
             for i in command_list:
                 if i in text:
                     command_list[i]()
-            if 'no' not in text:
+            if 'no' not in text.split():
                 x = "Anything else?"
             else:
+                global stop_second_loop
+                stop_second_loop = 1
                 x = "Bye bye"
         except sr.UnknownValueError:
             x = ("Sorry, I could not understand the audio.")
