@@ -16,6 +16,7 @@ engine = pyttsx3.init('sapi5')
 voices = engine.getProperty('voices')
 engine.setProperty('voices', voices[1].id)
 stop_second_loop = 0
+
 def speak(audio):
     engine.say(audio)
     engine.runAndWait()
@@ -50,14 +51,49 @@ def weather():
     os.system("python weather.py")
     # Make sure the weather data is fetched first
     weather.fetch_weather()
-
+    #num_dict = {'one':1, 'two':2, 'three':3, 'four':4, 'five':5, "six":6, 'seven':7, 'eight':8, 'nine':9, 'ten':10, 'eleven':11, 'twelve':12}
     # Now you can call the return functions
+    print(text.split())
+    
+    for i in text.split():
+       for i in text.split():
+        if ':00' in i:
+            time_hour = i.split(':')[0]
+            if "PM" in text.split() and int(time_hour)<12:
+                time_hour = str(int(time_hour) + 12)
+            elif "AM" in text.split():
+                if time_hour == '12':
+                    time_hour = '0'
+            elif "AM" not in text.split() and "PM" not in text.split():
+                time = datetime.datetime.now()
+                hour = time.hour
+                if time_hour == '12':
+                     x = [0,12]
+                else:
+                     x = [int(time_hour), int(time_hour) + 12]
+                if hour < x[0]:
+                     time_hour = x[0]
+                     day_ind = 0
+                elif hour > x[0] and hour < x[1]:
+                     day_ind = 0
+                     time_hour = x[1]
+                elif hour > x[1]:
+                     day_ind = 1
+                     time_hour = x[0]
+                else:
+                     time_hour = hour
+        
+    print(weather.return_weather())
+
+    
     current_temp = str(weather.return_temp())
 
     if current_temp[0] == '-':
         current_temp = (' negative '+ str(current_temp[1::]))
     speak("It is "+str(weather.return_current())+"outside")
     speak("With a temperature of"+current_temp+"degrees celsius")
+    #print(weather.return_weather())
+
     #print(weather.return_weather())
 
 
@@ -140,6 +176,7 @@ def repeat():
 
         try:
         # Recognize speech using Google Web Speech API
+            global text
             text = recognizer.recognize_google(audio)
             print(text)
             for i in command_list:
@@ -166,9 +203,9 @@ while True:
         print("Please say something(1):")
         audio = recognizer.listen(source)
     try:
-        text = recognizer.recognize_google(audio)
-        print(text)
-        if 'charles' in text.lower():
+        text1 = recognizer.recognize_google(audio)
+        print(text1)
+        if 'charles' in text1.lower():
             wishme()
             stop_second_loop = 0
             while stop_second_loop == 0:
