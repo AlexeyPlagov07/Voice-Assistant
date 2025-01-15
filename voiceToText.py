@@ -2,8 +2,10 @@ import pyttsx3
 import datetime
 import speech_recognition as sr
 import smtplib
-import weather
+import webbrowser
+#import weather
 import os
+from googlesearch import search
 class person:
     def __init__(self, name, phone, email):
         self.name = name
@@ -45,6 +47,14 @@ def date():
     speak(year)
 
 
+def google():
+    speak("What would you like to search? ")
+    query = take_command()
+    
+ 
+    
+    query = query.replace(" ", "+")
+    webbrowser.open(f'https://www.google.com/search?q={query}&sca_esv=aa5aa35c323c7bba&sxsrf=ADLYWIJQlWw9VTT3btmh4CJMCaw4p6mPuQ%3A1736914518140&source=hp&ei=VjaHZ9CQBuuPwbkP4reioQQ&iflsig=AL9hbdgAAAAAZ4dEZqAc3bZdyR5wRm3aWE9-yuKzFUqb&ved=0ahUKEwjQk-3m7vaKAxXrRzABHeKbKEQQ4dUDCBk&uact=5&oq=youtube&gs_lp=Egdnd3Mtd2l6Igd5b3V0dWJlMgsQLhiABBixAxiDATIIEAAYgAQYsQMyCxAAGIAEGLEDGIMBMgsQABiABBixAxiDATILEAAYgAQYsQMYgwEyCxAAGIAEGLEDGIMBMgUQABiABDIIEAAYgAQYsQMyCxAAGIAEGLEDGIMBMgsQABiABBixAxiDAUiGH1DjCFjzHXAFeACQAQCYAWSgAcYFqgEDOC4xuAEDyAEA-AEBmAIOoAL-BagCCsICBxAjGCcY6gLCAhEQLhiABBixAxjRAxiDARjHAcICCBAuGIAEGLEDwgIOEAAYgAQYsQMYgwEYigXCAg4QLhiABBixAxiDARiKBcICBRAuGIAEwgILEC4YgAQYxwEYrwHCAg0QLhiABBixAxiDARgKwgIKEAAYgAQYsQMYCsICDRAAGIAEGLEDGIMBGArCAgcQABiABBgKmAMH8QU6xMKfxOAuNZIHBDEzLjGgB-RW&sclient=gws-wiz')
 def weather():
     import weather
     import os
@@ -114,44 +124,49 @@ def wishme():
    speak("Welcome back sir!")
    speak("Charles at your service. Please tell me how can i help you?")
 
-def sendEmail():
-    print(person_dict)
-    recognizer = sr.Recognizer()
+def take_command():
     text1 = None
-    # Use the microphone as the source for input
     while text1 == None:
+        recognizer = sr.Recognizer()
+        print('say command')
         with sr.Microphone() as source:
-            speak("Who do you want to email?")
-            audio = recognizer.listen(source)
-
-            try:
-            # Recognize speech using Google Web Speech API
-                text1 = recognizer.recognize_google(audio)
-                print(text1)
-            except sr.UnknownValueError:
-                pass
-            except sr.RequestError:
-                pass
-    if text1 in person_dict:
-        content = None
-        while content == None:
-            with sr.Microphone() as source:
-                speak("What do you want to email?")
             
                 audio = recognizer.listen(source)
-        
+            
                 try:
                 # Recognize speech using Google Web Speech API
-                    content = recognizer.recognize_google(audio)
-                    print(content)
-                    speak("Emailing")
-                    speak(content)
-                    speak("to")
-                    speak(text1)
+                    text1 = recognizer.recognize_google(audio)
+                    print(text1)
                 except sr.UnknownValueError:
                     pass
                 except sr.RequestError:
                     pass
+                except UnboundLocalError:
+                    pass
+    return text1
+
+def sendEmail():
+    print(person_dict)
+    text1 = None
+    # Use the microphone as the source for input
+    while text1 == None:
+        speak("Who do you want to email?")
+        text1 = take_command()
+        
+    if text1 in person_dict:
+        content = None
+        while content == None:
+            content = take_command()
+            try:
+                # Recognize speech using Google Web Speech API
+                speak("Emailing")
+                speak(content)
+                speak("to")
+                speak(text1)
+            except sr.UnknownValueError:
+                pass
+            except sr.RequestError:
+                pass
     
         server = smtplib.SMTP('smtp.gmail.com', 587)
         server.ehlo()
@@ -163,37 +178,21 @@ def sendEmail():
         speak("Type the details in the console.")
         add_to_dict()
         sendEmail()
-command_list = {'time':time, 'date':date, "day":date, " no ":no, "email":sendEmail, "weather":weather}
+command_list = {'time':time, 'date':date, "day":date, " no ":no, "email":sendEmail, "weather":weather, "google":google, "search":search}
 def repeat():
+    global text
+    text = take_command()
+    for i in command_list:
+        if i in text.lower():
+            command_list[i]()
+    if 'no' not in text.split():
+        x = "Anything else?"
+    else:
+        global stop_second_loop
+        stop_second_loop = 1
+        x = "Bye bye"
 
-    # Initialize recognizer
-    recognizer = sr.Recognizer()
-
-    # Use the microphone as the source for input
-    with sr.Microphone() as source:
-        print("Please say something:")
-        audio = recognizer.listen(source)
-
-        try:
-        # Recognize speech using Google Web Speech API
-            global text
-            text = recognizer.recognize_google(audio)
-            print(text)
-            for i in command_list:
-                if i in text:
-                    command_list[i]()
-            if 'no' not in text.split():
-                x = "Anything else?"
-            else:
-                global stop_second_loop
-                stop_second_loop = 1
-                x = "Bye bye"
-        except sr.UnknownValueError:
-            x = ("Sorry, I could not understand the audio.")
-        except sr.RequestError:
-            x = ("Could not request results from Google Web Speech API.")
-
-        speak(x)
+    speak(x)
         
 while True:
     recognizer = sr.Recognizer()
