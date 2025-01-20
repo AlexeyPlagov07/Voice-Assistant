@@ -3,6 +3,7 @@ import datetime
 import speech_recognition as sr
 import smtplib
 import webbrowser
+import pygame
 #import weather
 import os
 from googlesearch import search
@@ -47,14 +48,32 @@ def date():
     speak(year)
 
 
+
+    
+def kill():
+
+
+# Initialize pygame mixer
+    pygame.mixer.init()
+
+# Load and play the sound
+    pygame.mixer.music.load('C:/Users/alexe/OneDrive/Desktop/Desktop_assistant/shotgun.mp3')
+    pygame.mixer.music.play()
+
+# Keep the program running while the sound plays
+    while pygame.mixer.music.get_busy():
+        pygame.time.Clock().tick(10)
 def google():
     speak("What would you like to search? ")
-    query = take_command()
-    
- 
-    
+    query = take_command()  
     query = query.replace(" ", "+")
-    webbrowser.open(f'https://www.google.com/search?q={query}&sca_esv=aa5aa35c323c7bba&sxsrf=ADLYWIJQlWw9VTT3btmh4CJMCaw4p6mPuQ%3A1736914518140&source=hp&ei=VjaHZ9CQBuuPwbkP4reioQQ&iflsig=AL9hbdgAAAAAZ4dEZqAc3bZdyR5wRm3aWE9-yuKzFUqb&ved=0ahUKEwjQk-3m7vaKAxXrRzABHeKbKEQQ4dUDCBk&uact=5&oq=youtube&gs_lp=Egdnd3Mtd2l6Igd5b3V0dWJlMgsQLhiABBixAxiDATIIEAAYgAQYsQMyCxAAGIAEGLEDGIMBMgsQABiABBixAxiDATILEAAYgAQYsQMYgwEyCxAAGIAEGLEDGIMBMgUQABiABDIIEAAYgAQYsQMyCxAAGIAEGLEDGIMBMgsQABiABBixAxiDAUiGH1DjCFjzHXAFeACQAQCYAWSgAcYFqgEDOC4xuAEDyAEA-AEBmAIOoAL-BagCCsICBxAjGCcY6gLCAhEQLhiABBixAxjRAxiDARjHAcICCBAuGIAEGLEDwgIOEAAYgAQYsQMYgwEYigXCAg4QLhiABBixAxiDARiKBcICBRAuGIAEwgILEC4YgAQYxwEYrwHCAg0QLhiABBixAxiDARgKwgIKEAAYgAQYsQMYCsICDRAAGIAEGLEDGIMBGArCAgcQABiABBgKmAMH8QU6xMKfxOAuNZIHBDEzLjGgB-RW&sclient=gws-wiz')
+    webbrowser.open(f'https://www.google.com/search?q={query}')
+
+
+def fuck():
+    speak("Nah fuck you, bitch ass nigga!!!")
+
+
 def weather():
     import weather
     import os
@@ -106,7 +125,18 @@ def weather():
 
     #print(weather.return_weather())
 
+def despicable():
+    
+# Initialize pygame mixer
+    pygame.mixer.init()
 
+# Load and play the sound
+    pygame.mixer.music.load('C:/Users/alexe/OneDrive/Desktop/Desktop_assistant/despicable.mp3')
+    pygame.mixer.music.play()
+
+# Keep the program running while the sound plays
+    while pygame.mixer.music.get_busy():
+        pygame.time.Clock().tick(10)
 
 
 def no():
@@ -178,7 +208,8 @@ def sendEmail():
         speak("Type the details in the console.")
         add_to_dict()
         sendEmail()
-command_list = {'time':time, 'date':date, "day":date, " no ":no, "email":sendEmail, "weather":weather, "google":google, "search":search}
+command_list = {'time':time, 'date':date, "day":date, " no ":no, "email":sendEmail, "weather":weather, "google":google, "search":search, "kill":kill, 
+                'despicable':despicable, 'fuck':fuck}
 def repeat():
     global text
     text = take_command()

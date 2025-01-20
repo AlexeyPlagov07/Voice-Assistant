@@ -1,4 +1,12 @@
-from googlesearch import search
-query = "hello"
-for i in search(query, tld="co.in", num=10, stop=10, pause=2):
-    print(i)
+import pygame
+
+# Initialize pygame mixer
+pygame.mixer.init()
+
+# Load and play the sound
+pygame.mixer.music.load('C:/Users/alexe/OneDrive/Desktop/Desktop_assistant/shotgun.mp3')
+pygame.mixer.music.play()
+
+# Keep the program running while the sound plays
+while pygame.mixer.music.get_busy():
+    pygame.time.Clock().tick(10)

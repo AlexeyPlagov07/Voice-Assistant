@@ -5,7 +5,7 @@ import asyncio
 import os
 
 # Your location and city fetching code
-send_url = "http://api.ipstack.com/check?access_key=fb6029d412780c84f340cec31b2d7ec2"
+send_url = "http://api.ipstack.com/check?access_key=645be217c1ecc610e92fef3314eda3d5"
 geo_req = requests.get(send_url)
 geo_json = json.loads(geo_req.text)
 latitude = geo_json['latitude']
